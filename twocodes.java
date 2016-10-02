@@ -4,7 +4,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import tester.*;
+//import tester.*;
 
 //to hold 
 class Utils {
@@ -13,41 +13,42 @@ class Utils {
         return new String(encoded, encoding);
     }
     public void listFilesForFolder(final File folder) throws IOException{
-        int i = 1;
+        int i = 0;
         for (final File fileEntry : folder.listFiles()) {
             i++;
         }
         String d[][] = new String[i + 1][i + 1];
         String axes[] = new String[i];
-        int j = 1;
-        int k = 1;
-        for (final File fileEntry1 : folder.listFiles()) {
+        int j = 0;
+        for (final File fileEntry1 : folder.listFiles()) { 
+            int k = 0;
             axes[j] = fileEntry1.getName();
-            j++;
             for (final File fileEntry2 : folder.listFiles()) {
                 String fe1 = readFile(fileEntry1.getPath(), Charset.defaultCharset()).replaceAll("\\s", "");
                 String fe2 = readFile(fileEntry2.getPath(), Charset.defaultCharset()).replaceAll("\\s", "");
                 d[j][k] = Integer.toString(levenPerc(fe1, fe2));
+                k++;
             }
+            j++;
         }
-        String acc = " ," + conCat(axes, i);
-        for (int z = 1; z <= 1; z++) {
-            d[0][z] = axes[z];
-        }
+        String acc = "ACCURACY ," + conCat(axes, i);
+//        for (int z = 0; z <= 1; z++) {
+//            d[0][z] = axes[z];
+//        }
         for (int y = 0; y < i; y++) {
-            acc = acc + conCat(d[y], i);
+            acc = acc + axes[y] + "," + conCat(d[y], i);
         }
         PrintWriter out = new PrintWriter("DejaVu.csv");
         out.println(acc);
         out.close();
     }
-
-    String newline = System.getProperty("line.separator");
-    String acc = "";
+    
     //concatenates an array of strings of length i
     String conCat(String[] a, int i) {
-        for (int x = 0; x <= i; x++) {
-            if (x != i){
+        String newline = System.getProperty("line.separator");
+        String acc = "";
+        for (int x = 0; x < i; x++) {
+            if (x != i-1){
                 acc = acc + a[x] + ",";
             }
             else{
@@ -124,31 +125,31 @@ class Utils {
 }
 
 class ExamplesUtils {
-    boolean testLevenshteinDistance(Tester t) {
-        return t.checkExpect(Utils.levenDist("kitten", "sitting"), 3) &&
-                t.checkExpect(Utils.levenDist("abcdefh", "zmxcvou"), 7) &&
-                t.checkExpect(Utils.levenDist("abcd", "abcd"), 0) &&
-                t.checkExpect(Utils.levenDist("", "abcd"), 4) &&
-                t.checkExpect(Utils.levenDist("zofp", ""), 4) &&
-                t.checkExpect(Utils.levenDist("abed", "abcd"), 1) &&
-                t.checkExpect(Utils.levenDist("abcd", "abcdffe"), 3) &&
-                t.checkExpect(Utils.levenDist("a  bc d", "abcd"), 3) &&
-                t.checkExpect(Utils.levenDist("ab cd", "ab  cd"), 1);
-    }
-
-    boolean testLevenPerc(Tester t) {
-        return t.checkExpect(Utils.levenPerc("kitten", "sitting"), 50) &&
-                t.checkExpect(Utils.levenPerc("abcdefh", "zmxcvou"), 0) &&
-                t.checkExpect(Utils.levenPerc("abcd", "abcd"), 100) &&
-                t.checkExpect(Utils.levenPerc("", "abcd"), 0) &&
-                t.checkExpect(Utils.levenPerc("zofp", ""), 0) &&
-                t.checkExpect(Utils.levenPerc("abed", "abcd"), 75) &&
-                t.checkExpect(Utils.levenPerc("abcd", "abcdffe"), 40) &&
-                t.checkExpect(Utils.levenPerc("a  bc d", "abcd"), 40) &&
-                t.checkExpect(Utils.levenPerc("ab cd", "ab  cd"), 80) &&
-                t.checkExpect(Utils.levenPerc("abcdefghijklmnopqrstuvwxyz","172830472987437173"),
-                        0);
-    }
+//    boolean testLevenshteinDistance(Tester t) {
+//        return t.checkExpect(Utils.levenDist("kitten", "sitting"), 3) &&
+//                t.checkExpect(Utils.levenDist("abcdefh", "zmxcvou"), 7) &&
+//                t.checkExpect(Utils.levenDist("abcd", "abcd"), 0) &&
+//                t.checkExpect(Utils.levenDist("", "abcd"), 4) &&
+//                t.checkExpect(Utils.levenDist("zofp", ""), 4) &&
+//                t.checkExpect(Utils.levenDist("abed", "abcd"), 1) &&
+//                t.checkExpect(Utils.levenDist("abcd", "abcdffe"), 3) &&
+//                t.checkExpect(Utils.levenDist("a  bc d", "abcd"), 3) &&
+//                t.checkExpect(Utils.levenDist("ab cd", "ab  cd"), 1);
+//    }
+//
+//    boolean testLevenPerc(Tester t) {
+//        return t.checkExpect(Utils.levenPerc("kitten", "sitting"), 50) &&
+//                t.checkExpect(Utils.levenPerc("abcdefh", "zmxcvou"), 0) &&
+//                t.checkExpect(Utils.levenPerc("abcd", "abcd"), 100) &&
+//                t.checkExpect(Utils.levenPerc("", "abcd"), 0) &&
+//                t.checkExpect(Utils.levenPerc("zofp", ""), 0) &&
+//                t.checkExpect(Utils.levenPerc("abed", "abcd"), 75) &&
+//                t.checkExpect(Utils.levenPerc("abcd", "abcdffe"), 40) &&
+//                t.checkExpect(Utils.levenPerc("a  bc d", "abcd"), 40) &&
+//                t.checkExpect(Utils.levenPerc("ab cd", "ab  cd"), 80) &&
+//                t.checkExpect(Utils.levenPerc("abcdefghijklmnopqrstuvwxyz","172830472987437173"),
+//                        0);
+//    }
 
     //    void testStuff() {
     //        int a = 9;
