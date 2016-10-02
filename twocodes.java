@@ -1,9 +1,10 @@
+
 //import java.util.Arrays;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-// import tester.*;
+import tester.*;
 
 //to hold 
 class Utils {
@@ -11,7 +12,7 @@ class Utils {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, encoding);
     }
-   public void listFilesForFolder(final File folder) throws IOException{
+    public void listFilesForFolder(final File folder) throws IOException{
         int i = 1;
         for (final File fileEntry : folder.listFiles()) {
             i++;
@@ -62,36 +63,49 @@ class Utils {
         // the first i characters of s and the first j characters of t
         // note that d has (m+1)*(n+1) values
         int m = Math.max(t.length(), s.length());
-        int d[][] = new int [2][m + 1];
+        int n = Math.min(t.length(), s.length());
+        if (n == 0) {
+            return m;
+        }
+        else{
+            String p = t;
+            String q = s;
+            if (t.length() > s.length()) {
+                s = p;
+                t = q;
+            }
+            int d[][] = new int [2][m + 1];
 
-        // source prefixes can be transformed into empty string by
-        // dropping all characters
-//        for (int i = 0; i <= s.length(); i++) {
-//            d[i][0] = i;
-//        }
-        // target prefixes can be reached from empty source prefix
-        // by inserting every character
-        for (int i = 0; i <= t.length(); i++) {
-            d[0][i] = i;
-        }
-        int substitutionCost;
-        for (int j = 1; j <= t.length(); j++) {
-            for (int i = 1; i <= m; i++) {
-                if (s.charAt(i - 1) == t.charAt(j - 1)) {
-                    substitutionCost = 0;
-                }
-                else {
-                    substitutionCost = 1;
-                }
-                d[1][i] = Math.min(d[i-1][j] + 1,                   // deletion
-                        Math.min(d[i][j-1] + 1,                   // insertion
-                                d[i-1][j-1] + substitutionCost));  // substitution
+            // source prefixes can be transformed into empty string by
+            // dropping all characters
+            //        for (int i = 0; i <= s.length(); i++) {
+            //            d[i][0] = i;
+            //        }
+            // target prefixes can be reached from empty source prefix
+            // by inserting every character
+            for (int i = 0; i <= m; i++) {
+                d[0][i] = i;
             }
-            for (int i = 0; i <= m; i++){
-                d[0][i] = d[1][i];
+            int substitutionCost;
+            for (int j = 1; j <= n; j++) {
+                d[1][0] = j;
+                for (int i = 1; i <= m; i++) {
+                    if (s.charAt(i - 1) == t.charAt(j - 1)) {
+                        substitutionCost = 0;
+                    }
+                    else {
+                        substitutionCost = 1;
+                    }
+                    d[1][i] = Math.min(d[0][i] + 1,                   // deletion
+                            Math.min(d[1][i-1] + 1,                   // insertion
+                                    d[0][i-1] + substitutionCost));  // substitution
+                }
+                for (int i = 0; i <= m; i++){
+                    d[0][i] = d[1][i];
+                }
             }
+            return d[1][m];
         }
-        return d[s.length()][t.length()];
     }
     //converts the levenDist of 2 strings into the approx. percentage they are different
     static int levenPerc(String a, String b) {
@@ -109,7 +123,7 @@ class Utils {
     }
 }
 
-/* class ExamplesUtils {
+class ExamplesUtils {
     boolean testLevenshteinDistance(Tester t) {
         return t.checkExpect(Utils.levenDist("kitten", "sitting"), 3) &&
                 t.checkExpect(Utils.levenDist("abcdefh", "zmxcvou"), 7) &&
@@ -121,8 +135,8 @@ class Utils {
                 t.checkExpect(Utils.levenDist("a  bc d", "abcd"), 3) &&
                 t.checkExpect(Utils.levenDist("ab cd", "ab  cd"), 1);
     }
-    */
- /*   boolean testLevenPerc(Tester t) {
+
+    boolean testLevenPerc(Tester t) {
         return t.checkExpect(Utils.levenPerc("kitten", "sitting"), 50) &&
                 t.checkExpect(Utils.levenPerc("abcdefh", "zmxcvou"), 0) &&
                 t.checkExpect(Utils.levenPerc("abcd", "abcd"), 100) &&
@@ -135,7 +149,7 @@ class Utils {
                 t.checkExpect(Utils.levenPerc("abcdefghijklmnopqrstuvwxyz","172830472987437173"),
                         0);
     }
-*/
+
     //    void testStuff() {
     //        int a = 9;
     //        int b= 0;
@@ -143,11 +157,10 @@ class Utils {
     //        PrintWriter printWriter = new PrintWriter("file.txt");
     //        printWriter.println("hello");
     //        printWriter.close();
-
-    //    PrintWriter out = new PrintWriter("filename.csv");
-    //    String c = "row 1, col1, 2, 3";
-    //    out.println(c);
-    //    
-    //    out.close();
+    //        PrintWriter out = new PrintWriter("filename.csv");
+    //        String c = "row 1, col1, 2, 3";
+    //        out.println(c);
+    //
+    //        out.close();
     //    }
-
+}
